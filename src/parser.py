@@ -19,7 +19,7 @@ class Parser:
         self.parser = yacc.yacc(module=self, write_tables=1)
 
     def parse(self, data):
-        self.parser.parse(data)
+        return self.parser.parse(data)
 
     def p_lang(self, p):
         'lang : statements'
@@ -87,7 +87,7 @@ class Parser:
 
     def p_block(self, p):
         'block : "{" statements "}"'
-        p[0] = p[1]
+        p[0] = p[2]
 
     def p_statement_phrase(self, p):
         'statement : phrase NEWLINE'
