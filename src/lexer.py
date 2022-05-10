@@ -5,7 +5,14 @@ class Lexer:
     def __init__(self):
         self.lexer = lex.lex(module=self, debug=False)
 
-    tokens = ['VAR', 'WORD', 'NEWLINE', 'TMPVAR', 'IF', 'ELIF', 'ELSE', 'FOR']
+    reserved = {
+        'if': 'IF',
+        'elif' : 'ELIF',
+        'else' : 'ELSE',
+        'for' : 'FOR'
+    }        
+
+    tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIAS'] + list(reserved.values())
     literals = ['{', '}', ':']
 
     t_ignore = ' \t'
@@ -19,8 +26,9 @@ class Lexer:
         r'\#[A-Za-z_]\w*'
         return t
 
-    def t_WORD(self, t):
-        r'\w+'
+    def t_TEXT(self, t):
+        r'\".*\"'
+        t.value = t.value[1:-1]
         return t
 
     def t_NEWLINE(self, t):
@@ -28,20 +36,9 @@ class Lexer:
         t.lexer.lineno += 1
         return t
 
-    def t_IF(self, t):
-        r'@if'
-        return t
-
-    def t_ELIF(self, t):
-        r'@elif'
-        return t
-
-    def t_ELSE(self, t):
-        r'@else'
-        return t
-
-    def t_FOR(self, t):
-        r'@for'
+    def t_ALIAS(self, t):
+        r'\w+'
+        t.type = self.reserved.get(t.value, 'ALIAS')
         return t
 
     def t_error(self, t):

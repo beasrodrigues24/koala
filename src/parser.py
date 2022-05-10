@@ -94,19 +94,16 @@ class Parser:
         p[0] = p[1] + '\n'
 
     def p_phrase(self, p):
-        'phrase : phrase word'
-        spaces = ''
-        if p[1]:
-            spaces = ' '
-        p[0] = p[1] + spaces + p[2]
+        'phrase : phrase text'
+        p[0] = p[1] + p[2]
 
     def p_phrase_empty(self, p):
         'phrase : '
         p[0] = ''
 
-    def p_word(self, p):
+    def p_text(self, p):
         '''
-        word : WORD
+        text : TEXT
             | var
             | TMPVAR
         '''
