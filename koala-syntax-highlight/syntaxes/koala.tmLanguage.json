@@ -1,0 +1,49 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Koala",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#variable"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.koala",
+				"match": "\\b(if|elif|else|for|alias|include)\\b"
+			},
+			{
+				"name": "keyword.operator.koala",
+				"match": "\\$"
+			}]
+		},
+		"variable": {
+			"patterns": [{
+				"name": "variable.language.koala",
+				"match": "\\@\\w+"
+			},
+			{
+				"name": "variable.parameter.koala",
+				"match": "\\#\\w+"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.koala",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.koala",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.koa"
+}

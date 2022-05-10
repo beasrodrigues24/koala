@@ -1,0 +1,25 @@
+{
+    "name": "koala-syntax-highlight",
+    "displayName": "Koala Syntax Highlight",
+    "description": "Syntax Highlighting for the famous koala templating language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.67.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "koala",
+            "aliases": ["Koala", "koala"],
+            "extensions": [".koa"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "koala",
+            "scopeName": "source.koa",
+            "path": "./syntaxes/koala.tmLanguage.json"
+        }]
+    }
+}
