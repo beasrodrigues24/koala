@@ -17,6 +17,7 @@ class Parser:
         self.lexer = Lexer()
         self.tokens = self.lexer.tokens
         self.parser = yacc.yacc(module=self, write_tables=1)
+        self.aliases = {}
 
     def parse(self, data):
         return self.parser.parse(data)
@@ -62,10 +63,10 @@ class Parser:
 
     def p_elif(self, p):
         'elif : ELIF VAR block'
-        if p[2] in self.dic:
+        if p[2] in dic:
             p[0] = p[3]
         else:
-            p[0] = ""
+            p[0] = ''
 
     def p_elifs_empty(self, p):
         'elifs : '
@@ -80,41 +81,77 @@ class Parser:
         p[0] = ""
 
     def p_statement_for(self, p):
-        'statement : FOR TMPVAR ":" var block'
+        'statement : FOR TMPVAR ":" variable block'
         p[0] = ""
         for x in p[4]:
-            p[0] += p[5].strip().replace(p[2], x) + '\n'
+            p[0] += p[5].replace(p[2], x)
+
+    def p_statement_alias(self, p):
+        'statement : ALIAS ALIASNAME tmpvars block'
+        self.aliases[p[2]] = {
+            'vars' : p[3],
+            'content' : p[4]
+        }
+        p[0] = ''
+        print(self.aliases)
+
+    def p_statement_include(self, p):
+        'statement : INCLUDE TEXT'
+        include_file = open(p[2], "r")
+        include_content = include_file.read()
+        include_parser = Parser(dic)
+        p[0] = include_parser.parse(include_content)
+        self.aliases.update(include_parser.aliases)
+
+    def p_tmpvars(self, p):
+        'tmpvars : tmpvars TMPVAR'
+        p[0] = p[1] + [p[2]]
+
+    def p_tmpvars_empty(self, p):
+        'tmpvars : '
+        p[0] = []
 
     def p_block(self, p):
         'block : "{" statements "}"'
         p[0] = p[2]
 
-    def p_statement_phrase(self, p):
-        'statement : phrase NEWLINE'
-        p[0] = p[1] + '\n'
-
-    def p_phrase(self, p):
-        'phrase : phrase text'
-        p[0] = p[1] + p[2]
-
-    def p_phrase_empty(self, p):
-        'phrase : '
-        p[0] = ''
-
-    def p_text(self, p):
-        '''
-        text : TEXT
-            | var
-            | TMPVAR
-        '''
+    def p_statement_text(self, p):
+        'statement : text'
         p[0] = p[1]
 
-    def p_var(self, p):
-        'var : VAR'
+    def p_text_TEXT(self, p):
+        'text : TEXT'
+        p[0] = p[1]
+
+    def p_text_variable(self, p):
+        'text : variable'
+        p[0] = p[1]
+
+    def p_text_DOLLAR(self, p):
+        'text : DOLLAR'
+        p[0] = p[1]
+
+    def p_text_callalias(self, p):
+        'text : ALIASNAME  "(" variable ")"'
+        tmp = ''
+        if p[1] in self.aliases:
+            for tmpvar in self.aliases[p[1]]['vars']:
+                tmp += self.aliases[p[1]]['content'].replace(tmpvar, p[3])
+            p[0] = tmp
+        else:
+            print("Error")
+            exit(1)
+
+    def p_variable_var(self, p):
+        'variable : VAR'
         tmp = dic
         for x in p[1]:
             tmp = tmp[x]
         p[0] = tmp
+
+    def p_variable_tmpvar(self, p):
+        'variable : TMPVAR'
+        p[0] = p[1]
 
     def p_error(self, p):
         print("Syntax error: ", p)
