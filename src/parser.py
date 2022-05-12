@@ -85,12 +85,13 @@ class Parser:
         p[0] = ''
 
     def p_statement_include(self, p):
-        'statement : INCLUDE TEXT'
-        include_file = open(p[2], "r")
+        'statement : INCLUDE TEXT NEWLINE'
+        include_file = open(p[2], 'r')
         include_content = include_file.read()
         include_parser = Parser(self.dic)
-        p[0] = include_parser.parse(include_content)
+        include_parser.parse(include_content)
         self.aliases.update(include_parser.aliases)
+        p[0] = ''
 
     def p_tmpvars(self, p):
         'tmpvars : tmpvars TMPVAR'
@@ -116,9 +117,9 @@ class Parser:
         'text : variable'
         p[0] = p[1]
 
-    def p_text_dollar(self, p):
-        'text : DOLLAR'
-        p[0] = p[1]
+    def p_text_newline(self, p):
+        'text : NEWLINE'
+        p[0] = p[1] 
 
     def p_text_callalias(self, p):
         'text : ALIASNAME  "(" variable ")"'
