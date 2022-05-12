@@ -1,15 +1,5 @@
 from ply import yacc
 from lexer import Lexer
-import sys
-
-dic = {
-    'coisas' : 'mais coisas',
-    'cenas' : ['bue', 'de', 'cenas', 'juro', 'mano'],
-    'welele' : {
-        'yo' : ['eh', 'eh'],
-        'ya' : 'oh boy'
-    }
-}
 
 class Parser:
     def __init__(self, dic):
@@ -47,7 +37,7 @@ class Parser:
 
     def p_if(self, p):
         'if : IF VAR block'
-        if p[2] in dic:
+        if p[2] in self.dic:
             p[0] = p[3]
         else:
             p[0] = ""
@@ -63,7 +53,7 @@ class Parser:
 
     def p_elif(self, p):
         'elif : ELIF VAR block'
-        if p[2] in dic:
+        if p[2] in self.dic:
             p[0] = p[3]
         else:
             p[0] = ''
@@ -93,13 +83,12 @@ class Parser:
             'content' : p[4]
         }
         p[0] = ''
-        print(self.aliases)
 
     def p_statement_include(self, p):
         'statement : INCLUDE TEXT'
         include_file = open(p[2], "r")
         include_content = include_file.read()
-        include_parser = Parser(dic)
+        include_parser = Parser(self.dic)
         p[0] = include_parser.parse(include_content)
         self.aliases.update(include_parser.aliases)
 
@@ -119,7 +108,7 @@ class Parser:
         'statement : text'
         p[0] = p[1]
 
-    def p_text_TEXT(self, p):
+    def p_text_text(self, p):
         'text : TEXT'
         p[0] = p[1]
 
@@ -127,7 +116,7 @@ class Parser:
         'text : variable'
         p[0] = p[1]
 
-    def p_text_DOLLAR(self, p):
+    def p_text_dollar(self, p):
         'text : DOLLAR'
         p[0] = p[1]
 
@@ -144,7 +133,7 @@ class Parser:
 
     def p_variable_var(self, p):
         'variable : VAR'
-        tmp = dic
+        tmp = self.dic
         for x in p[1]:
             tmp = tmp[x]
         p[0] = tmp
@@ -156,11 +145,3 @@ class Parser:
     def p_error(self, p):
         print("Syntax error: ", p)
 
-file = open(sys.argv[1], "r")
-content = file.read()
-
-parser = Parser(dic)
-
-result = parser.parse(content)
-
-print(result)
