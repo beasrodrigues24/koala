@@ -51,7 +51,8 @@ class Lexer:
         return t
 
     def t_TMPVAR(self, t):
-        r'\#[A-Za-z_]\w*'
+        r'\#[A-Za-z_]\w*(\.\w+)*'
+        t.value = t.value[1:].split('.')
         self.ignore_newline = False
         return t
 
@@ -65,10 +66,11 @@ class Lexer:
     def t_NEWLINE(self, t):
         r'\n'
         t.lexer.lineno += 1
-        if self.ignore_newline:
-            t.value = ''
-        self.ignore_newline = False
-        return t
+        if not self.ignore_newline:
+            return t
+        else:
+            self.ignore_newline = False
+
 
     def t_ALIASNAME(self, t):
         r'\w+'
@@ -78,7 +80,7 @@ class Lexer:
 
     def t_ANY_error(self, t):
         PrettyPrint.template_warn(
-            f'Invalid token: \'{t.value[0]}\'. Skipping...'.encode("unicode_escape").decode("utf-8"),
+            f'Invalid token: \'{t.value[0]}\'. Skipping...'.encode('unicode_escape').decode('utf-8'),
             self.template_filepath,
             t.lexer.lineno
         )

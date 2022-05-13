@@ -1,15 +1,15 @@
-from fileinput import filename
+import sys
 from ply import yacc
 from lexer import Lexer
 from pretty_print import PrettyPrint
+from koala_ast import DictVar, TmpVar, Bool, Text, Block, Alias, CallAlias, For, If, Ifs
+
 
 class Parser:
-    def __init__(self, dic):
-        self.dic = dic
+    def __init__(self):
         self.lexer = Lexer()
         self.tokens = self.lexer.tokens
         self.parser = yacc.yacc(module=self, write_tables=1)
-        self.aliases = {}
         self.data = ''
         self.template_filepath = ''
 
@@ -26,87 +26,94 @@ class Parser:
 
     def p_lang(self, p):
         'lang : statements'
-        p[0] = p[1]
+        p[0] = Block(p[1])
 
     def p_statements(self, p):
         'statements : statements statement'
-        p[0] = p[1] + p[2]
+        p[0] = p[1] + [p[2]]
 
     def p_statements_empty(self, p):
         'statements : '
-        p[0] = ""
+        p[0] = []
+
+    def p_statement_variable(self, p):
+        'statement : variable'
+        p[0] = p[1]
+
+    def p_statement_newline(self, p):
+        'statement : NEWLINE'
+        if p[1] != '':
+            p[0] = Text(p[1])
 
     def p_statement_conditionals(self, p):
         'statement : if elifs else'
-        if p[1]:
-            p[0] = p[1]
-        elif p[2]:
-            p[0] = p[2]
-        elif p[3]:
-            p[0] = p[3]
-        else:
-            p[0] = ""
+        p[0] = Ifs([p[1]] + p[2] + [p[3]])
 
     def p_if(self, p):
-        'if : IF VAR block'
-        if p[2] in self.dic:
-            p[0] = p[3]
-        else:
-            p[0] = ""
+        'if : IF condition block'
+        p[0] = If(p[2], p[3])
 
     def p_elifs(self, p):
         'elifs : elifs elif'
-        if p[1]:
-            p[0] = p[1]
-        elif p[2]:
-            p[0] = p[2]
-        else:
-            p[0] = ""
+        p[0] = p[1] + [p[2]]
 
     def p_elif(self, p):
-        'elif : ELIF VAR block'
-        if p[2] in self.dic:
-            p[0] = p[3]
-        else:
-            p[0] = ''
+        'elif : ELIF condition block'
+        p[0] = If(p[1], p[2])
 
     def p_elifs_empty(self, p):
         'elifs : '
-        p[0] = ""
+        p[0] = []
 
     def p_else(self, p):
         'else : ELSE block'
-        p[0] = p[2]
+        p[0] = If(Bool(True), p[2])
 
     def p_else_empty(self, p):
         'else : '
-        p[0] = ""
+        p[0] = []
+
+    def p_condition_var(self, p):
+        'condition : VAR'
+        p[0] = DictVar(p[1])
+
+    def p_condition_tmpvar(self, p):
+        'condition : TMPVAR'
+        p[0] = TmpVar(p[1])
 
     def p_statement_for(self, p):
         'statement : FOR TMPVAR ":" variable block'
-        p[0] = ""
-        for x in p[4]:
-            p[0] += p[5].replace(p[2], x)
+        if '.' in p[2]:
+            PrettyPrint.template_warn(
+                '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
+                self.template_filepath,
+                p.lineno(2)
+            )
+        p[0] = For(p[2][0], p[4], p[5])
 
     def p_statement_alias(self, p):
-        'statement : ALIAS ALIASNAME tmpvars block'
-        self.aliases[p[2]] = {
-            'vars' : p[3],
-            'content' : p[4]
-        }
-        p[0] = ''
+        'statement : ALIAS ALIASNAME TMPVAR block'
+        if '.' in p[3]:
+            PrettyPrint.template_warn(
+                '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
+                self.template_filepath,
+                p.lineno(3)
+            )
+        p[0] = Alias(p[2], p[3][0], p[4])
+
+    def p_statement_callalias(self, p):
+        'statement : ALIASNAME  "(" variable ")"'
+        p[0] = CallAlias(p[1], p[3])
 
     def p_statement_include(self, p):
         'statement : INCLUDE TEXT NEWLINE'
-        include_parser = Parser(self.dic)
+        include_parser = Parser()
         include_parser.load_template(p[2])
-        include_parser.parse()
-        self.aliases.update(include_parser.aliases)
-        p[0] = ''
+        p[0] = Block(include_parser.parse())
 
     def p_tmpvars(self, p):
         'tmpvars : tmpvars TMPVAR'
-        p[0] = p[1] + [p[2]]
+        p[0] = p[1] + [TmpVar(p[2])]
 
     def p_tmpvars_empty(self, p):
         'tmpvars : '
@@ -114,50 +121,41 @@ class Parser:
 
     def p_block(self, p):
         'block : "{" statements "}"'
-        p[0] = p[2]
-
-    def p_statement_text(self, p):
-        'statement : text'
-        p[0] = p[1]
-
-    def p_text_text(self, p):
-        'text : TEXT'
-        p[0] = p[1]
-
-    def p_text_variable(self, p):
-        'text : variable'
-        p[0] = p[1]
-
-    def p_text_newline(self, p):
-        'text : NEWLINE'
-        p[0] = p[1]
-
-    def p_text_callalias(self, p):
-        'text : ALIASNAME  "(" variable ")"'
-        tmp = ''
-        if p[1] in self.aliases:
-            for tmpvar in self.aliases[p[1]]['vars']:
-                tmp += self.aliases[p[1]]['content'].replace(tmpvar, p[3])
-            p[0] = tmp
-        else:
-            PrettyPrint.template_error(f'Alias {p[1]} not defined.', self.template_filepath, p.lineno(1))
-            exit(1)
+        p[0] = Block(p[2])
 
     def p_variable_var(self, p):
         'variable : VAR'
-        tmp = self.dic
-        for x in p[1]:
-            tmp = tmp[x]
-        p[0] = tmp
+        p[0] = DictVar(p[1])
 
     def p_variable_tmpvar(self, p):
         'variable : TMPVAR'
-        p[0] = p[1]
+        p[0] = TmpVar(p[1])
+
+    def p_variable_text(self, p):
+        'variable : TEXT'
+        p[0] = Text(p[1])
 
     def p_error(self, p):
         PrettyPrint.template_error(
-            f'Syntax error. Token \'{p.value}\' not expected.'.encode("unicode_escape").decode("utf-8"),
+            f'Syntax error. Token \'{p.value}\' not expected.'.encode(
+                'unicode_escape').decode('utf-8'),
             self.template_filepath,
             p.lexer.lineno
         )
         exit(1)
+
+
+parser = Parser()
+parser.load_template(sys.argv[1])
+
+ast = parser.parse()
+
+dict = {
+    'variables': {
+        'cenas': ['a', 'b']
+    },
+    'tmp': {},
+    'aliases': {}
+}
+
+print(ast.eval(dict))
