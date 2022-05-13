@@ -1,7 +1,8 @@
-import argparse 
+import argparse
+import imp 
 from parser import Parser
 import yaml
-import json
+from jsonparser.json_parser import JSONParser
 
 if __name__ == '__main__':
     args_parser = argparse.ArgumentParser(description='koala: template language parser')
@@ -20,7 +21,8 @@ if __name__ == '__main__':
     if (args.dictionary_type[0] == 'yaml'):
         dic = yaml.load(dic_content, Loader=yaml.FullLoader)
     else: 
-        dic = json.loads(dic_content.read())
+        jsonparser = JSONParser()
+        dic = jsonparser.load(dic_content.read())
 
     p = Parser(dic)
     result = p.parse(template)

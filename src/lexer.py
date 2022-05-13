@@ -71,5 +71,5 @@ class Lexer:
         return t
 
     def t_ANY_error(self, t):
-        print('ERROR', t)
+        print('Invalid token:', t.value)
         t.lexer.skip(1)
