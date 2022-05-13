@@ -1,5 +1,7 @@
+from fileinput import filename
 from ply import yacc
 from lexer import Lexer
+from pretty_print import PrettyPrint
 
 class Parser:
     def __init__(self, dic):
@@ -8,9 +10,19 @@ class Parser:
         self.tokens = self.lexer.tokens
         self.parser = yacc.yacc(module=self, write_tables=1)
         self.aliases = {}
+        self.data = ''
+        self.template_filepath = ''
 
-    def parse(self, data):
-        return self.parser.parse(data)
+    def load_template(self, filepath):
+        self.template_filepath = filepath
+        try:
+            self.data = open(filepath, 'r').read()
+        except IOError:
+            PrettyPrint.error(f'File {filepath} not found.')
+            exit(1)
+
+    def parse(self):
+        return self.parser.parse(self.data)
 
     def p_lang(self, p):
         'lang : statements'
@@ -86,10 +98,9 @@ class Parser:
 
     def p_statement_include(self, p):
         'statement : INCLUDE TEXT NEWLINE'
-        include_file = open(p[2], 'r')
-        include_content = include_file.read()
         include_parser = Parser(self.dic)
-        include_parser.parse(include_content)
+        include_parser.load_template(p[2])
+        include_parser.parse()
         self.aliases.update(include_parser.aliases)
         p[0] = ''
 
@@ -119,7 +130,7 @@ class Parser:
 
     def p_text_newline(self, p):
         'text : NEWLINE'
-        p[0] = p[1] 
+        p[0] = p[1]
 
     def p_text_callalias(self, p):
         'text : ALIASNAME  "(" variable ")"'
@@ -129,7 +140,7 @@ class Parser:
                 tmp += self.aliases[p[1]]['content'].replace(tmpvar, p[3])
             p[0] = tmp
         else:
-            print("Error")
+            PrettyPrint.template_error(f'Alias {p[1]} not defined.', self.template_filepath, p.lineno(1))
             exit(1)
 
     def p_variable_var(self, p):
@@ -144,5 +155,9 @@ class Parser:
         p[0] = p[1]
 
     def p_error(self, p):
-        print("Syntax error: ", p)
-
+        PrettyPrint.template_error(
+            f'Syntax error. Token \'{p.value}\' not expected.'.encode("unicode_escape").decode("utf-8"),
+            self.template_filepath,
+            p.lexer.lineno
+        )
+        exit(1)

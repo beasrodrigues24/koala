@@ -1,10 +1,16 @@
 from ply import lex
 
+from pretty_print import PrettyPrint
+
 class Lexer:
 
     def __init__(self):
         self.lexer = lex.lex(module=self, debug=False)
         self.ignore_newline = False
+        self.template_filepath = ''
+
+    def set_template_filepath(self, template_filepath):
+        self.template_filepath = template_filepath
 
     reserved = {
         'if': 'IF',
@@ -35,7 +41,7 @@ class Lexer:
     def t_rcbrace(self, t):
         r'\)'
         t.type = ')'
-        self.ignore_newline = True 
+        self.ignore_newline = True
         return t
 
     def t_VAR(self, t):
@@ -59,7 +65,7 @@ class Lexer:
     def t_NEWLINE(self, t):
         r'\n'
         t.lexer.lineno += 1
-        if self.ignore_newline: 
+        if self.ignore_newline:
             t.value = ''
         self.ignore_newline = False
         return t
@@ -71,5 +77,9 @@ class Lexer:
         return t
 
     def t_ANY_error(self, t):
-        print('Invalid token:', t.value)
+        PrettyPrint.template_warn(
+            f'Invalid token: \'{t.value[0]}\'. Skipping...'.encode("unicode_escape").decode("utf-8"),
+            self.template_filepath,
+            t.lexer.lineno
+        )
         t.lexer.skip(1)
