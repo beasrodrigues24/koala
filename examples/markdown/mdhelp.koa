@@ -1,0 +1,22 @@
+alias extendTOC #item {
+    if #item.head {
+        #item.head 
+        if #item.sub {
+            for #subitem : #item.sub {
+                extendTOC(#subitem)
+            }
+        }
+    } else {
+        #item
+    }
+}
+alias extendSections #evalsec {
+    "# "#evalsec.title 
+    #evalsec.content 
+    
+    if #evalsec.subsections {
+        for #subsection : #evalsec.subsections {
+            extendSections(#subsection)
+        }
+    } 
+}

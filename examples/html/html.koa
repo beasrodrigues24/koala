@@ -1,0 +1,75 @@
+include "examples/html/htmlhelp.koa"
+"<!DOCTYPE html>
+<head>
+  <meta charset=\"utf-8\" />
+  <meta name=\"generator\" content=\"koala\" />
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=yes\" />"
+
+if @authors {
+    for #author : @authors {
+        "  <meta name=\"author\" content=\""#author "\"/>"
+    }
+}
+
+if @date {
+    "  <meta name=\"dcterms.date\" content=\""@date "\"/>"
+}
+
+if @keywords {
+    for #keyword : @keywords {
+        "  <meta name=\"keywords\" content=\""#keyword "\"/>"
+    }
+}
+
+if @description {
+    "  <meta name=\"description\" content=\""@description "\"/>"
+}
+
+if @title {
+  "<title>"@title"</title>"
+}
+for #css : @css {
+  "<link rel=\"stylesheet\" href=\""#css "\"/>"
+}
+  "<script src=\"//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js\"></script>
+</head>
+<body>"
+
+"<header id=\"title-block-header\">
+<h1 class=\"title\">"@title"</h1>"
+
+
+if @subtitle {
+  "<p class=\"subtitle\">"@subtitle"</p>"
+}
+
+if @authors {
+  for #author : #authors {
+    "<p class=\"author\">"#author"</p>"
+  }
+}
+
+if @date {
+  "<p class=\"date\">"@date"</p>"
+}
+
+if @abstract {
+  "<div class=\"abstract\">
+  <div class=\"abstract-title\">"@abstract.title"</div>"
+  @abstract.content
+  "</div>"
+}
+"</header>"
+
+if @tableofcontents {
+    for #elem : @tableofcontents {
+        extendTOC(#elem)
+    }  
+}
+
+for #section : @sections {
+    extendSections(#section)  
+}
+
+"</body>
+</html>"

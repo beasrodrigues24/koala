@@ -130,3 +130,6 @@ dmypy.json
 
 src/parser.out 
 src/parsetab.py
+
+src/jsonparser/parser.out
+src/jsonparser/parsetab.py

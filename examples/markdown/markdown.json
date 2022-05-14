@@ -1,0 +1,54 @@
+{
+    "titleblock" : "koala",
+    "tableofcontents" : 
+    [
+        {
+            "head": "Titulo 1", 
+            "sub": [
+                {
+                    "head": "Subtitulo 1",
+                    "sub" : [
+                        "Subsubtitulo 1"
+                    ]
+                },
+                "Subtitulo 2"
+            ]
+        },
+        "Titulo 2",
+        "Titulo 3"
+    ],
+    "sections" : 
+    [
+        {
+            "title": "Titulo 1",
+            "content" : "Conteudo 1",
+            "subsections" : [ 
+                {
+                    "title" : "Subtitulo 1",
+                    "content" : "Subconteudo 1",
+                    "subsections" : [
+                        {
+                            "title" : "Subsubtitulo 1",
+                            "content" : "Subsubconteudo 1"
+                        }
+                    ]
+                    
+                }
+            ]
+        }, 
+        {
+            "title": "Titulo 2",
+            "content" : "Conteudo 2"
+        }, 
+        {
+            "title": "Titulo 3",
+            "content" : "Conteudo 3"
+        }
+    ],
+    "bibliography" : [
+        {
+            "source" : "Google",
+            "lastchecked" : "31/02/2022"
+        }
+    ]
+}

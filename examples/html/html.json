@@ -1,0 +1,56 @@
+{
+    "authors-meta": [
+        "Beatriz Rodrigues",
+        "Francisco Neves",
+        "Guilherme Fernandes"
+    ],
+    "date-meta" : "15/05/2022",
+    "keywords" : [
+        "koala", "regular expressions", "yacc"
+    ],
+    "description" : "template language generator",
+    "css" : [
+        "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css"
+    ],
+    "meta-title" : "koala",
+    "title" : "koala",
+    "subtitle" : "PL",
+    "authors" : [
+        "Beatriz Rodrigues",
+        "Francisco Neves",
+        "Guilherme Fernandes"
+    ],
+    "date" : "15/05/2022",
+    "abstract" : {
+        "title" : "TP2",
+        "content" : "Acomplished in the context of PL (Language Processing)"
+    },
+    "sections" : 
+    [
+        {
+            "title": "Titulo 1",
+            "content" : "Conteudo 1",
+            "subsections" : [ 
+                {
+                    "title" : "Subtitulo 1",
+                    "content" : "Subconteudo 1",
+                    "subsections" : [
+                        {
+                            "title" : "Subsubtitulo 1",
+                            "content" : "Subsubconteudo 1"
+                        }
+                    ]
+                    
+                }
+            ]
+        }, 
+        {
+            "title": "Titulo 2",
+            "content" : "Conteudo 2"
+        }, 
+        {
+            "title": "Titulo 3",
+            "content" : "Conteudo 3"
+        }
+    ]
+}
