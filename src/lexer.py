@@ -22,7 +22,7 @@ class Lexer:
     }
 
     tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIASNAME'] + list(reserved.values())
-    literals = ['{', '}', ':', '(', ')']
+    literals = ['{', '}', ':', '(', ')', ',']
 
     t_ignore = ' \t'
 

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
+import copy
 
 
 class Statement(ABC):
@@ -47,6 +48,7 @@ class DictVar(Var, Condition):
         for x in self.name:
             if x not in v:
                 return False
+            v = v[x]
 
         return True
 
@@ -69,6 +71,7 @@ class TmpVar(Var, Condition):
         for x in self.name:
             if x not in tmp:
                 return False
+            tmp = tmp[x]
 
         return True
 
@@ -103,13 +106,13 @@ class Block(Statement):
 
 
 class Alias(Statement):
-    def __init__(self, name: str, variable: str, block: Block):
+    def __init__(self, name: str, vars: List[str], block: Block):
         self.name = name
-        self.variable = variable
+        self.vars = vars
         self.block = block
 
     def __repr__(self):
-        return f'Alias: {self.name}({self.variable}) {{{self.block}}}'
+        return f'Alias: {self.name}({self.vars}) {{{self.block}}}'
 
     def eval(self, dict):
         dict['aliases'][self.name] = self
@@ -117,20 +120,24 @@ class Alias(Statement):
 
 
 class CallAlias(Statement):
-    def __init__(self, alias_name: str, var: Var):
+    def __init__(self, alias_name: str, args: List[Var]):
         self.alias_name = alias_name
-        self.var = var  # TODO: allow multiple variaobles
+        self.args = args
 
     def __repr__(self):
-        return f'CallAlias: {self.alias_name}({self.var})'
+        return f'CallAlias: {self.alias_name}({self.args})'
 
     def eval(self, dict):
         alias: Alias = dict['aliases'][self.alias_name]  # TODO: check if exists
-        dict['tmp'][alias.variable] = self.var.eval(dict)
+        if len(self.args) != len(alias.vars):
+            pass # TODO: erro
 
-        r = alias.block.eval(dict)
+        new_dict = copy.deepcopy(dict)
 
-        dict['tmp'].pop(alias.variable)
+        for (var, arg) in zip(alias.vars, self.args):
+            new_dict['tmp'][var] = arg.eval(dict)
+
+        r = alias.block.eval(new_dict)
 
         return r
 
@@ -145,12 +152,11 @@ class For(Statement):
         return f'For: {self.tmpvar_name} : {self.var} {{{self.block}}}'
 
     def eval(self, dict):
+        new_dict = copy.deepcopy(dict)
         r = ''
         for v in self.var.eval(dict):
-            dict['tmp'][self.tmpvar_name] = v
-            r += self.block.eval(dict)
-
-        dict['tmp'].pop(self.tmpvar_name)
+            new_dict['tmp'][self.tmpvar_name] = v
+            r += self.block.eval(new_dict)
 
         return r
 

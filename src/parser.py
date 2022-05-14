@@ -46,11 +46,11 @@ class Parser:
 
     def p_statement_conditionals(self, p):
         'statement : if elifs else'
-        p[0] = Ifs([p[1]] + p[2] + [p[3]])
+        p[0] = Ifs(p[1] + p[2] + p[3])
 
     def p_if(self, p):
         'if : IF condition block'
-        p[0] = If(p[2], p[3])
+        p[0] = [If(p[2], p[3])]
 
     def p_elifs(self, p):
         'elifs : elifs elif'
@@ -66,7 +66,7 @@ class Parser:
 
     def p_else(self, p):
         'else : ELSE block'
-        p[0] = If(Bool(True), p[2])
+        p[0] = [If(Bool(True), p[2])]
 
     def p_else_empty(self, p):
         'else : '
@@ -91,18 +91,37 @@ class Parser:
         p[0] = For(p[2][0], p[4], p[5])
 
     def p_statement_alias(self, p):
-        'statement : ALIAS ALIASNAME TMPVAR block'
-        if '.' in p[3]:
-            PrettyPrint.template_warn(
-                '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
-                self.template_filepath,
-                p.lineno(3)
-            )
-        p[0] = Alias(p[2], p[3][0], p[4])
+        'statement : ALIAS ALIASNAME tmpvars block'
+        tmpvars = []
+        for tmpvar in p[3]:
+            if '.' in tmpvar:
+                PrettyPrint.template_warn(
+                    '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
+                    self.template_filepath,
+                    p.lineno(3)
+                )
+            tmpvars += [tmpvar[0]]
+        p[0] = Alias(p[2], tmpvars, p[4])
 
     def p_statement_callalias(self, p):
-        'statement : ALIASNAME  "(" variable ")"'
+        'statement : ALIASNAME  "(" args ")"'
         p[0] = CallAlias(p[1], p[3])
+
+    def p_args(self, p):
+        'args : variables'
+        p[0] = p[1]
+
+    def p_args_empty(self, p):
+        'args : '
+        p[0] = []
+
+    def p_variables(self, p):
+        'variables : variables "," variable'
+        p[0] = p[1] + [p[3]]
+
+    def p_variables_single(self, p):
+        'variables : variable'
+        p[0] = [p[1]]
 
     def p_statement_include(self, p):
         'statement : INCLUDE TEXT NEWLINE'
@@ -112,7 +131,7 @@ class Parser:
 
     def p_tmpvars(self, p):
         'tmpvars : tmpvars TMPVAR'
-        p[0] = p[1] + [TmpVar(p[2])]
+        p[0] = p[1] + [p[2]]
 
     def p_tmpvars_empty(self, p):
         'tmpvars : '
