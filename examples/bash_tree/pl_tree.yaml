@@ -1,0 +1,24 @@
+dir:
+  name: pl2022
+  subdirs:
+    - name: aulasTeóricas
+    - name: aulasPráticas
+    - name: avaliação
+      subdirs:
+        - name: teste
+          files:
+            - name: skeleton.tex
+              path: ~/templates/skeleton.tex
+        - name: recurso
+        - name: especial
+    - name: web
+      files:
+        - name: index.html
+          path: ~/templates/index.html
+      subdirs:
+        - name: imagens
+          files:
+            - name: prof.jpg
+              path: ~/templates/imagens/prof.jpg
+            - name: um.jpg
+              path: ~/templates/imagens/um.jpg
