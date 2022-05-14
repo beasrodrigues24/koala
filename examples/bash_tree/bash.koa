@@ -1,0 +1,12 @@
+alias cd #dir {
+    "cd " #dir
+}
+alias mkdir #dir {
+    "mkdir " #dir
+}
+alias cp #source #dest {
+    "cp " #source " " #dest
+}
+alias touch #file {
+    "touch " #file
+}

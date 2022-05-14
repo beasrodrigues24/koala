@@ -1,0 +1,17 @@
+include "bash.koa"
+alias traverse #dir {
+    mkdir(#dir.name)
+    cd(#dir.name)
+    for #file : #dir.files {
+        if #file.path {
+            cp(#file.path, ".")
+        } else {
+            touch(#file.name)
+        }
+    }
+    for #subdir : #dir.subdirs {
+        traverse(#subdir)
+        cd("..")
+    }
+}
+traverse(@dir)

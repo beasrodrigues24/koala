@@ -1,0 +1,10 @@
+dir:
+  name: Project
+  files:
+    - name: README.md
+
+  subdirs:
+    - name: src
+      files:
+        - name: main.rs
+          path: ~/templates/main.rs
