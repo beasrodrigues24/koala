@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 import copy
+from pretty_print import PrettyPrint
 
 
 class Statement(ABC):
@@ -19,6 +20,12 @@ class Condition(ABC):
         pass
 
 
+class Iterable(ABC):
+    @abstractmethod
+    def iter(self, dict):
+        pass
+
+
 class Bool(Condition):
     def __init__(self, bool: bool):
         self.bool = bool
@@ -27,21 +34,12 @@ class Bool(Condition):
         return bool
 
 
-class DictVar(Var, Condition):
+class DictVar(Var, Condition, Iterable):
     def __init__(self, name: [str]):
         self.name = name
 
     def __repr__(self):
         return f'DicVar: {self.name}'
-
-    def eval(self, dict):
-        v = dict['variables']
-        for x in self.name:
-            if x in v:
-                v = v[x]
-            else:
-                pass  # TODO: error handling
-        return v
 
     def test(self, dict):
         v = dict['variables']
@@ -52,19 +50,27 @@ class DictVar(Var, Condition):
 
         return True
 
+    def iter(self, dict):
+        v = dict['variables']
+        for x in self.name:
+            if x in v:
+                v = v[x]
+            else:
+                PrettyPrint.error(
+                    f'Variable \'{".".join(self.name)}\' not found in the dictionary.')
+                exit(1)
+        return v
 
-class TmpVar(Var, Condition):
+    def eval(self, dict):
+        return str(self.iter(dict))
+
+
+class TmpVar(Var, Condition, Iterable):
     def __init__(self, name: [str]):
         self.name = name
 
     def __repr__(self):
         return f'TmpVar: {self.name}'
-
-    def eval(self, dict):
-        tmp = dict['tmp']
-        for x in self.name:
-            tmp = tmp[x]
-        return tmp
 
     def test(self, dict):
         tmp = dict['tmp']
@@ -75,15 +81,31 @@ class TmpVar(Var, Condition):
 
         return True
 
+    def iter(self, dict):
+        v = dict['tmp']
+        for x in self.name:
+            if x in v:
+                v = v[x]
+            else:
+                PrettyPrint.error(f'Variable \'{".".join(self.name)}\' not in scope.')
+                exit(1)
+        return v
 
-class Text(Var):
+    def eval(self, dict):
+        return str(self.iter(dict))
+
+
+class Text(Var, Iterable):
     def __init__(self, content: str):
         self.content = content
 
     def __repr__(self):
         return f'Text: \'{self.content}\''.encode('unicode_escape').decode('utf-8')
 
-    def eval(self, eval):
+    def iter(self, dict):
+        return self.content
+
+    def eval(self, dict):
         return self.content
 
 
@@ -100,7 +122,7 @@ class Block(Statement):
     def eval(self, dict):
         r = ''
         for b in self.statements:
-            r += str(b.eval(dict))
+            r += b.eval(dict)
 
         return r
 
@@ -128,14 +150,23 @@ class CallAlias(Statement):
         return f'CallAlias: {self.alias_name}({self.args})'
 
     def eval(self, dict):
-        alias: Alias = dict['aliases'][self.alias_name]  # TODO: check if exists
+        if self.alias_name not in dict['aliases']:
+            PrettyPrint.error(
+                f'Alias \'{self.alias_name}\' called but not defined.'
+            )
+            exit(1)
+
+        alias: Alias = dict['aliases'][self.alias_name]
         if len(self.args) != len(alias.vars):
-            pass # TODO: erro
+            PrettyPrint.error(
+                f'Wrong number of arguments passed to alias \'{alias.name}\': Expected {len(alias.vars)}, received {len(self.args)}.'
+            )
+            exit(1)
 
         new_dict = copy.deepcopy(dict)
 
         for (var, arg) in zip(alias.vars, self.args):
-            new_dict['tmp'][var] = arg.eval(dict)
+            new_dict['tmp'][var] = arg.iter(dict)
 
         r = alias.block.eval(new_dict)
 
@@ -154,7 +185,7 @@ class For(Statement):
     def eval(self, dict):
         new_dict = copy.deepcopy(dict)
         r = ''
-        for v in self.var.eval(dict):
+        for v in self.var.iter(dict):
             new_dict['tmp'][self.tmpvar_name] = v
             r += self.block.eval(new_dict)
 
