@@ -1,0 +1,38 @@
+if @titleblock{
+        "= " @title
+    if @author{
+        for #aut : @author {#aut.name if #aut.email{" <"#aut.email">"}@sep" "}
+    }
+    if @date {
+        @date
+    }
+    if @keywords{
+        ":keywords: " for #keyword : @keywords {#keyword@sep" "}
+    }
+    if @lang{
+        ":lang: " @lang
+    }
+    if @toc{
+        ":toc:"
+    }
+
+}
+if @abstract{
+    "[abstract]"
+    "== Abstract"
+    @abstract
+
+}
+for #item : @headerincludes{
+    #item
+
+}
+for #item : @includebefore{
+    #item
+
+}
+@body
+for #item : @includeafter{
+    
+    #item
+}

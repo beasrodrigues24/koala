@@ -1,0 +1,21 @@
+if @titleblock{
+    @titleblock
+    
+}
+for #item : @headerincludes{
+    #item
+    
+}
+for #item : @includebefore{
+    #item
+
+}
+if @tableofcontents{
+    @tableofcontents
+
+}
+@body
+for #item : @includeafter{
+
+    #item
+}

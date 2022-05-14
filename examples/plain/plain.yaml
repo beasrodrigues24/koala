@@ -1,0 +1,14 @@
+titleblock: Title Block
+headerincludes:
+  - Include 1
+  - Include 2
+  - Include 3
+includebefore:
+  - Include 1
+  - Include 2
+  - Include 3
+tableofcontents: TableOfContents
+body: Body
+includeafter:
+  - Include 1
+  - Include 2

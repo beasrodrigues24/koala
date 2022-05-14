@@ -1,0 +1,26 @@
+titleblock:
+title: Title
+author:
+  - Author1:
+    name: Author Name
+    email: Author Email
+  - Author2:
+    name: Author2 Name
+sep: ;
+date: Date
+keywords:
+ - Keyword1
+ - Keyword2
+lang: Language
+toc: 
+abstract: Abstract
+headerincludes:
+  - Include 1
+  - Include 2
+includebefore:
+  - Include 1
+  - Include 2
+body: Body
+includeafter:
+  - Include 1
+  - Include 2

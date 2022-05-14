@@ -1,0 +1,22 @@
+= Title
+Author Name <Author Email>; Author2 Name; Date
+:keywords: Keyword1; Keyword2; :lang: Language
+:toc:
+
+[abstract]
+== Abstract
+Abstract
+
+Include 1
+
+Include 2
+
+Include 1
+
+Include 2
+
+Body
+
+Include 1
+
+Include 2
