@@ -57,8 +57,8 @@ class Lexer:
         return t
 
     def t_TEXT(self, t):
-        r'\"[^"]+\"'
-        t.value = t.value[1:-1]
+        r'\"(\\"|[^"])*\"'
+        t.value = t.value.replace('\\','')[1:-1]
         t.lexer.lineno += t.value.count('\n')
         self.ignore_newline = False
         return t
