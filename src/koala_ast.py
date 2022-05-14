@@ -4,16 +4,6 @@ import copy
 from pretty_print import PrettyPrint
 
 
-class Statement(ABC):
-    @abstractmethod
-    def eval(self, dict):
-        pass
-
-
-class Var(Statement):
-    pass
-
-
 class Condition(ABC):
     @abstractmethod
     def test(self, dict):
@@ -26,6 +16,16 @@ class Iterable(ABC):
         pass
 
 
+class Statement(ABC):
+    @abstractmethod
+    def eval(self, dict):
+        pass
+
+
+class Var(Statement, Condition, Iterable):
+    pass
+
+
 class Bool(Condition):
     def __init__(self, bool: bool):
         self.bool = bool
@@ -34,7 +34,7 @@ class Bool(Condition):
         return bool
 
 
-class DictVar(Var, Condition, Iterable):
+class DictVar(Var):
     def __init__(self, name: [str]):
         self.name = name
 
@@ -65,7 +65,7 @@ class DictVar(Var, Condition, Iterable):
         return str(self.iter(dict))
 
 
-class TmpVar(Var, Condition, Iterable):
+class TmpVar(Var):
     def __init__(self, name: [str]):
         self.name = name
 
@@ -95,12 +95,15 @@ class TmpVar(Var, Condition, Iterable):
         return str(self.iter(dict))
 
 
-class Text(Var, Iterable):
+class Text(Var):
     def __init__(self, content: str):
         self.content = content
 
     def __repr__(self):
         return f'Text: \'{self.content}\''.encode('unicode_escape').decode('utf-8')
+
+    def test(self, dict):
+        return True
 
     def iter(self, dict):
         return self.content
@@ -185,9 +188,10 @@ class For(Statement):
     def eval(self, dict):
         new_dict = copy.deepcopy(dict)
         r = ''
-        for v in self.var.iter(dict):
-            new_dict['tmp'][self.tmpvar_name] = v
-            r += self.block.eval(new_dict)
+        if self.var.test(dict):
+            for v in self.var.iter(dict):
+                new_dict['tmp'][self.tmpvar_name] = v
+                r += self.block.eval(new_dict)
 
         return r
 
