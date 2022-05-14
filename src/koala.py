@@ -12,18 +12,26 @@ if __name__ == '__main__':
 
     args = args_parser.parse_args()
 
-    dic_content = open(args.dictionary[0], 'r')
+    dict_content = open(args.dictionary[0], 'r')
 
-    dic = {}
+    vars_dict = {}
     if (args.dictionary_type[0] == 'yaml'):
-        dic = yaml.load(dic_content, Loader=yaml.FullLoader)
+        vars_dict = yaml.load(dict_content, Loader=yaml.FullLoader)
     else:
         jsonparser = JSONParser()
-        dic = jsonparser.load(dic_content.read())
+        vars_dict = jsonparser.load(dict_content.read())
 
-    p = Parser(dic)
+    dict = {
+        'variables': vars_dict,
+        'tmp': {},
+        'aliases': {}
+    }
+
+    p = Parser()
     p.load_template(args.template_file[0])
-    result = p.parse()
+    ast = p.parse()
+
+    res = ast.eval(dict)
 
     output = open(args.output_file[0], 'w')
-    output.write(result)
+    output.write(res)

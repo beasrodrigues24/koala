@@ -1,4 +1,3 @@
-import sys
 from ply import yacc
 from lexer import Lexer
 from pretty_print import PrettyPrint
@@ -143,19 +142,3 @@ class Parser:
             p.lexer.lineno
         )
         exit(1)
-
-
-parser = Parser()
-parser.load_template(sys.argv[1])
-
-ast = parser.parse()
-
-dict = {
-    'variables': {
-        'cenas': ['a', 'b']
-    },
-    'tmp': {},
-    'aliases': {}
-}
-
-print(ast.eval(dict))
