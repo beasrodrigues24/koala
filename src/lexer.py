@@ -1,4 +1,5 @@
 from ply import lex
+import re
 
 from pretty_print import PrettyPrint
 
@@ -58,7 +59,7 @@ class Lexer:
 
     def t_TEXT(self, t):
         r'\"(\\"|[^"])*\"'
-        t.value = t.value.replace('\\','')[1:-1]
+        t.value = re.sub(r'\\(.)', lambda x: x.group(1), t.value[1:-1])
         t.lexer.lineno += t.value.count('\n')
         self.ignore_newline = False
         return t
