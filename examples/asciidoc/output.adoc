@@ -1,6 +1,8 @@
 = Title
-Author Name <Author Email>; Author2 Name; Date
-:keywords: Keyword1; Keyword2; :lang: Language
+Author Name <Author Email>; Author2 Name
+Date
+:keywords: Keyword1; Keyword2
+:lang: Language
 :toc:
 
 [abstract]

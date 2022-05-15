@@ -2,6 +2,7 @@ from typing import List
 from abc import ABC, abstractmethod
 from .conditions import Condition
 from .pipes import Pipe
+from pretty_print import PrettyPrint
 
 class Iterable(ABC):
     @abstractmethod
@@ -10,7 +11,7 @@ class Iterable(ABC):
 
 
 class Var(Condition, Iterable):
-    def __init__(self, name: [str], pipes: List[Pipe]):
+    def __init__(self, name: List[str], pipes: List[Pipe]):
         self.name = name
         self.pipes = pipes
 

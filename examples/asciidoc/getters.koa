@@ -1,0 +1,2 @@
+alias AuthorName #author{#author.name}
+alias AuthorEmail #author{if #author.email{"<"#author.email">"}}

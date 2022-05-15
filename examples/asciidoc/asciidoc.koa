@@ -1,13 +1,15 @@
+include "getters.koa"
 if @titleblock{
         "= " @title
     if @author{
-        for #aut : @author {#aut.name if #aut.email{" <"#aut.email">"}@sep" "}
+        for #aut : @author/head {AuthorName(#aut) " " AuthorEmail(#aut)"; "} AuthorName(@author/last) AuthorEmail(@author/last)
+
     }
     if @date {
         @date
     }
     if @keywords{
-        ":keywords: " for #keyword : @keywords {#keyword@sep" "}
+        ":keywords: " for #keyword : @keywords/head {#keyword"; "} @keywords/last
     }
     if @lang{
         ":lang: " @lang
