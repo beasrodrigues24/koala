@@ -19,10 +19,17 @@ class Lexer:
         'else' : 'ELSE',
         'for' : 'FOR',
         'alias' : 'ALIAS',
-        'include' : 'INCLUDE'
+        'include' : 'INCLUDE',
     }
 
-    tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIASNAME'] + list(reserved.values())
+    pipes = {
+        'first': 'PIPE_FIRST',
+        'last': 'PIPE_LAST',
+        'head': 'PIPE_HEAD',
+        'tail': 'PIPE_TAIL',
+    }
+
+    tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIASNAME'] + list(reserved.values()) + list(pipes.values())
     literals = ['{', '}', ':', '(', ')', ',']
 
     t_ignore = ' \t'
@@ -56,6 +63,14 @@ class Lexer:
         t.value = t.value[1:].split('.')
         self.ignore_newline = False
         return t
+
+    def t_pipe(self, t):
+        r'/\w+'
+        t.type = self.pipes.get(t.value[1:], '')
+        if t.type:
+            return t
+        else:
+            self.t_ANY_error(t)
 
     def t_TEXT(self, t):
         r'\"(\\"|[^"])*\"'

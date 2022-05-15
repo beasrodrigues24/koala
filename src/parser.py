@@ -1,8 +1,10 @@
 from ply import yacc
 from lexer import Lexer
 from pretty_print import PrettyPrint
-from koala_ast import DictVar, TmpVar, Bool, Text, Block, Alias, CallAlias, For, If, Ifs
-
+from koala_ast.variables import DictVar, TmpVar, Text
+from koala_ast.statements import Block, Alias, CallAlias, For, If, Ifs
+from koala_ast.conditions import Bool
+from koala_ast.pipes import PipeFirst, PipeLast, PipeHead, PipeTail
 
 class Parser:
     def __init__(self):
@@ -42,7 +44,7 @@ class Parser:
     def p_statement_newline(self, p):
         'statement : NEWLINE'
         if p[1] != '':
-            p[0] = Text(p[1])
+            p[0] = Text(p[1], [])
 
     def p_statement_conditionals(self, p):
         'statement : if elifs else'
@@ -58,7 +60,7 @@ class Parser:
 
     def p_elif(self, p):
         'elif : ELIF condition block'
-        p[0] = If(p[1], p[2])
+        p[0] = If(p[2], p[3])
 
     def p_elifs_empty(self, p):
         'elifs : '
@@ -73,12 +75,12 @@ class Parser:
         p[0] = []
 
     def p_condition_var(self, p):
-        'condition : VAR'
-        p[0] = DictVar(p[1])
+        'condition : VAR pipes'
+        p[0] = DictVar(p[1], p[2])
 
     def p_condition_tmpvar(self, p):
-        'condition : TMPVAR'
-        p[0] = TmpVar(p[1])
+        'condition : TMPVAR pipes'
+        p[0] = TmpVar(p[1], p[2])
 
     def p_statement_for(self, p):
         'statement : FOR TMPVAR ":" variable block'
@@ -142,16 +144,40 @@ class Parser:
         p[0] = Block(p[2])
 
     def p_variable_var(self, p):
-        'variable : VAR'
-        p[0] = DictVar(p[1])
+        'variable : VAR pipes'
+        p[0] = DictVar(p[1], p[2])
 
     def p_variable_tmpvar(self, p):
-        'variable : TMPVAR'
-        p[0] = TmpVar(p[1])
+        'variable : TMPVAR pipes'
+        p[0] = TmpVar(p[1], p[2])
 
     def p_variable_text(self, p):
-        'variable : TEXT'
-        p[0] = Text(p[1])
+        'variable : TEXT pipes'
+        p[0] = Text(p[1], p[2])
+
+    def p_pipes(self, p):
+        'pipes : pipes pipe'
+        p[0] = p[1] + [p[2]]
+
+    def p_pipes_empty(self, p):
+        'pipes : '
+        p[0] = []
+
+    def p_pipe_first(self, p):
+        'pipe : PIPE_FIRST'
+        p[0] = PipeFirst()
+
+    def p_pipe_last(self, p):
+        'pipe : PIPE_LAST'
+        p[0] = PipeLast()
+
+    def p_pipe_head(self, p):
+        'pipe : PIPE_HEAD'
+        p[0] = PipeHead()
+
+    def p_pipe_tail(self, p):
+        'pipe : PIPE_TAIL'
+        p[0] = PipeTail()
 
     def p_error(self, p):
         PrettyPrint.template_error(

@@ -2,114 +2,14 @@ from abc import ABC, abstractmethod
 from typing import List
 import copy
 from pretty_print import PrettyPrint
-
-
-class Condition(ABC):
-    @abstractmethod
-    def test(self, dict):
-        pass
-
-
-class Iterable(ABC):
-    @abstractmethod
-    def iter(self, dict):
-        pass
+from .variables import Var
+from .conditions import Condition
 
 
 class Statement(ABC):
     @abstractmethod
     def eval(self, dict):
         pass
-
-
-class Var(Statement, Condition, Iterable):
-    pass
-
-
-class Bool(Condition):
-    def __init__(self, bool: bool):
-        self.bool = bool
-
-    def test(self, dict):
-        return bool
-
-
-class DictVar(Var):
-    def __init__(self, name: [str]):
-        self.name = name
-
-    def __repr__(self):
-        return f'DicVar: {self.name}'
-
-    def test(self, dict):
-        v = dict['variables']
-        for x in self.name:
-            if x not in v:
-                return False
-            v = v[x]
-
-        return True
-
-    def iter(self, dict):
-        v = dict['variables']
-        for x in self.name:
-            if x in v:
-                v = v[x]
-            else:
-                PrettyPrint.error(
-                    f'Variable \'{".".join(self.name)}\' not found in the dictionary.')
-                exit(1)
-        return v
-
-    def eval(self, dict):
-        return str(self.iter(dict))
-
-
-class TmpVar(Var):
-    def __init__(self, name: [str]):
-        self.name = name
-
-    def __repr__(self):
-        return f'TmpVar: {self.name}'
-
-    def test(self, dict):
-        tmp = dict['tmp']
-        for x in self.name:
-            if x not in tmp:
-                return False
-            tmp = tmp[x]
-
-        return True
-
-    def iter(self, dict):
-        v = dict['tmp']
-        for x in self.name:
-            if x in v:
-                v = v[x]
-            else:
-                PrettyPrint.error(f'Variable \'{".".join(self.name)}\' not in scope.')
-                exit(1)
-        return v
-
-    def eval(self, dict):
-        return str(self.iter(dict))
-
-
-class Text(Var):
-    def __init__(self, content: str):
-        self.content = content
-
-    def __repr__(self):
-        return f'Text: \'{self.content}\''.encode('unicode_escape').decode('utf-8')
-
-    def test(self, dict):
-        return True
-
-    def iter(self, dict):
-        return self.content
-
-    def eval(self, dict):
-        return self.content
 
 
 class Block(Statement):
