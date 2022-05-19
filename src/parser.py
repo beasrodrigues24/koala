@@ -1,10 +1,9 @@
 from ply import yacc
 from lexer import Lexer
 from pretty_print import PrettyPrint
-from koala_ast.variables import DictVar, TmpVar, Text
+from koala_ast.variables import DictVar, TmpVar, Text, Field, Pipe
 from koala_ast.statements import Block, Alias, CallAlias, For, If, Ifs
 from koala_ast.conditions import Bool
-from koala_ast.pipes import PipeFirst, PipeLast, PipeHead, PipeTail
 
 class Parser:
     def __init__(self):
@@ -44,14 +43,14 @@ class Parser:
     def p_statement_newline(self, p):
         'statement : NEWLINE'
         if p[1] != '':
-            p[0] = Text(p[1], [])
+            p[0] = Text(p[1])
 
     def p_statement_conditionals(self, p):
         'statement : if elifs else'
         p[0] = Ifs(p[1] + p[2] + p[3])
 
     def p_if(self, p):
-        'if : IF condition block'
+        'if : IF variable block'
         p[0] = [If(p[2], p[3])]
 
     def p_elifs(self, p):
@@ -59,7 +58,7 @@ class Parser:
         p[0] = p[1] + [p[2]]
 
     def p_elif(self, p):
-        'elif : ELIF condition block'
+        'elif : ELIF variable block'
         p[0] = If(p[2], p[3])
 
     def p_elifs_empty(self, p):
@@ -74,36 +73,36 @@ class Parser:
         'else : '
         p[0] = []
 
-    def p_condition_var(self, p):
-        'condition : VAR pipes'
-        p[0] = DictVar(p[1], p[2])
-
-    def p_condition_tmpvar(self, p):
-        'condition : TMPVAR pipes'
-        p[0] = TmpVar(p[1], p[2])
-
     def p_statement_for(self, p):
         'statement : FOR TMPVAR ":" variable block'
-        if '.' in p[2]:
-            PrettyPrint.template_warn(
-                '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
-                self.template_filepath,
-                p.lineno(2)
-            )
-        p[0] = For(p[2][0], p[4], p[5])
+        # if '.' in p[2]:
+        #     PrettyPrint.template_warn(
+        #         '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
+        #         self.template_filepath,
+        #         p.lineno(2)
+        #     )
+        p[0] = For(p[2], p[4], p[5])
 
     def p_statement_alias(self, p):
         'statement : ALIAS ALIASNAME tmpvars block'
-        tmpvars = []
-        for tmpvar in p[3]:
-            if '.' in tmpvar:
-                PrettyPrint.template_warn(
-                    '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
-                    self.template_filepath,
-                    p.lineno(3)
-                )
-            tmpvars += [tmpvar[0]]
-        p[0] = Alias(p[2], tmpvars, p[4])
+        # tmpvars = []
+        # for tmpvar in p[3]:
+        #     if '.' in tmpvar:
+        #         PrettyPrint.template_warn(
+        #             '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
+        #             self.template_filepath,
+        #             p.lineno(3)
+        #         )
+        #     tmpvars += [tmpvar[0]]
+        p[0] = Alias(p[2], p[3], p[4])
+
+    def p_tmpvars(self, p):
+        'tmpvars : tmpvars TMPVAR'
+        p[0] = p[1] + [p[2]]
+
+    def p_tmpvars_empty(self, p):
+        'tmpvars : '
+        p[0] = []
 
     def p_statement_callalias(self, p):
         'statement : ALIASNAME  "(" args ")"'
@@ -131,53 +130,29 @@ class Parser:
         include_parser.load_template(p[2])
         p[0] = Block(include_parser.parse())
 
-    def p_tmpvars(self, p):
-        'tmpvars : tmpvars TMPVAR'
-        p[0] = p[1] + [p[2]]
-
-    def p_tmpvars_empty(self, p):
-        'tmpvars : '
-        p[0] = []
-
     def p_block(self, p):
         'block : "{" statements "}"'
         p[0] = Block(p[2])
 
     def p_variable_var(self, p):
-        'variable : VAR pipes'
-        p[0] = DictVar(p[1], p[2])
+        'variable : VAR'
+        p[0] = DictVar(p[1])
 
     def p_variable_tmpvar(self, p):
-        'variable : TMPVAR pipes'
-        p[0] = TmpVar(p[1], p[2])
+        'variable : TMPVAR'
+        p[0] = TmpVar(p[1])
 
     def p_variable_text(self, p):
-        'variable : TEXT pipes'
-        p[0] = Text(p[1], p[2])
+        'variable : TEXT'
+        p[0] = Text(p[1])
 
-    def p_pipes(self, p):
-        'pipes : pipes pipe'
-        p[0] = p[1] + [p[2]]
+    def p_variable_field(self, p):
+        'variable : variable FIELD'
+        p[0] = Field(p[1], p[2])
 
-    def p_pipes_empty(self, p):
-        'pipes : '
-        p[0] = []
-
-    def p_pipe_first(self, p):
-        'pipe : PIPE_FIRST'
-        p[0] = PipeFirst()
-
-    def p_pipe_last(self, p):
-        'pipe : PIPE_LAST'
-        p[0] = PipeLast()
-
-    def p_pipe_head(self, p):
-        'pipe : PIPE_HEAD'
-        p[0] = PipeHead()
-
-    def p_pipe_tail(self, p):
-        'pipe : PIPE_TAIL'
-        p[0] = PipeTail()
+    def p_variable_pipe(self, p):
+        'variable : variable PIPE'
+        p[0] = Pipe(p[1], p[2])
 
     def p_error(self, p):
         PrettyPrint.template_error(

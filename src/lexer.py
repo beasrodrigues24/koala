@@ -22,14 +22,7 @@ class Lexer:
         'include' : 'INCLUDE',
     }
 
-    pipes = {
-        'first': 'PIPE_FIRST',
-        'last': 'PIPE_LAST',
-        'head': 'PIPE_HEAD',
-        'tail': 'PIPE_TAIL',
-    }
-
-    tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIASNAME'] + list(reserved.values()) + list(pipes.values())
+    tokens = ['VAR', 'TEXT', 'NEWLINE', 'TMPVAR', 'ALIASNAME', 'FIELD', 'PIPE'] + list(reserved.values())
     literals = ['{', '}', ':', '(', ')', ',']
 
     t_ignore = ' \t'
@@ -53,24 +46,16 @@ class Lexer:
         return t
 
     def t_VAR(self, t):
-        r'\@[A-Za-z_]\w*(\.\w+)*'
-        t.value = t.value[1:].split('.')
+        r'\@[A-Za-z_]\w*'
+        t.value = t.value[1:]
         self.ignore_newline = False
         return t
 
     def t_TMPVAR(self, t):
-        r'\#[A-Za-z_]\w*(\.\w+)*'
-        t.value = t.value[1:].split('.')
+        r'\#[A-Za-z_]\w*'
+        t.value = t.value[1:]
         self.ignore_newline = False
         return t
-
-    def t_pipe(self, t):
-        r'/\w+'
-        t.type = self.pipes.get(t.value[1:], '')
-        if t.type:
-            return t
-        else:
-            self.t_ANY_error(t)
 
     def t_TEXT(self, t):
         r'\"(\\"|[^"])*\"'
@@ -87,6 +72,15 @@ class Lexer:
         else:
             self.ignore_newline = False
 
+    def t_FIELD(self, t):
+        r'\.\w+'
+        t.value = t.value[1:]
+        return t
+
+    def t_PIPE(self, t):
+        r'/\w+'
+        t.value = t.value[1:]
+        return t
 
     def t_ALIASNAME(self, t):
         r'\w+'

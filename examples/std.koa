@@ -1,3 +1,1 @@
-alias join #list #delim {
-    for #elem : #list/head {#elem #delim} #list/last
-}
+alias join #list #delim { for #elem : #list/head {#elem #delim} #list/last }

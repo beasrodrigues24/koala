@@ -1,11 +1,9 @@
 include "examples/std.koa"
-alias get_num #pokemon { #pokemon.num }
-alias get_name #pokemon { #pokemon.name }
 "<!DOCTYPE html>
-<table>
+<table cellspacing=\"20\">
     <thead>
         <tr>
-            <th>Image</th>
+            <th></th>
             <th>Number</th>
             <th>Name</th>
             <th>Type</th>
@@ -16,17 +14,17 @@ alias get_name #pokemon { #pokemon.name }
 "   <tbody>"
 for #poke : @pokemon {
 "       <tr>"
-"           <td><img src="#poke.img"></td>"
-"           <td>"#poke.num"</th>"
-"           <td>"#poke.name"</td>"
-"           <td>"join(#poke.type, "br")"</td>"
-"           <td>"
+"           <td ALIGN=\"CENTER\"><img src="#poke.img"></td>"
+"           <td ALIGN=\"CENTER\">"#poke.num"</th>"
+"           <td ALIGN=\"CENTER\">"#poke.name"</td>"
+"           <td ALIGN=\"CENTER\">"join(#poke.type, "<br>")"</td>"
+"           <td ALIGN=\"CENTER\">"
     if #poke.next_evolution {
         for #evo : #poke.next_evolution/head {
 "               "#evo.name
 "               <br>"
         }
-"               "get_name(#poke.next_evolution/last)
+"               "#poke.next_evolution/last.name
 "           </td>"
     }
 "      </tr>"
