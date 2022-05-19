@@ -83,3 +83,73 @@ recipes:
     veggie: Sim
     doses: 4
     time: 35min
+  - name: Esparguete à Carbonara 
+    image: https://www.pingodoce.pt/wp-content/uploads/2015/03/esparguete-a-carbonara.jpg
+    site: https://www.pingodoce.pt/receitas/esparguete-carbonara/
+    difficulty: Fácil
+    veggie: Não 
+    doses: 2
+    time: 20min
+  - name: Bombocas de Morango
+    image: https://www.teleculinaria.pt/wp-content/uploads/2019/09/Bombocas-CHFB-00003-696x463.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/doces-e-sobremesas/bombocas-de-morango/
+    difficulty: Médio
+    veggie: Sim
+    doses: 7
+    time: 1h16
+  - name: Chili e Nachos Caseiros
+    image: https://www.teleculinaria.pt/wp-content/uploads/2020/09/Nachos-caseiros-CHLM-6-696x465.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/carnes/chili-e-nachos-caseiros/
+    difficulty: Fácil
+    veggie: Não
+    doses: 6
+    time: 40min
+  - name: Ossobuco de Verão
+    image: https://www.teleculinaria.pt/wp-content/uploads/2019/11/Ossobuco-CHSB-4-696x464.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/carnes/ossobuco-de-verao/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 2h32min
+  - name: Borrego Assado à Padeiro
+    image: https://www.teleculinaria.pt/wp-content/uploads/2020/01/Borrego-assado-a-padeiro-CHMM-10-696x465.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/carnes/borrego-assado-a-padeiro/
+    difficulty: Fácil
+    veggie: Não
+    doses: 6
+    time: 1h16
+  - name: Lasanha de Polvo
+    image: https://www.teleculinaria.pt/wp-content/uploads/2022/05/Lasanha-de-polvo-CHSB-16-696x464.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/peixes/polvo-peixes/lasanha-de-polvo/
+    difficulty: Fácil
+    veggie: Não
+    doses: 6
+    time: 1h40min
+  - name: Pataniscas de Bacalhau
+    image: https://www.teleculinaria.pt/wp-content/uploads/2018/11/pataniscas-de-bacalhau-696x464.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/peixes/receita-de-pataniscas-de-bacalhau/
+    difficulty: Fácil
+    veggie: Não
+    doses: 5
+    time: 1h30min
+  - name: Bolinhas de Queijo
+    image: https://www.teleculinaria.pt/wp-content/uploads/2020/01/Bolinhas-de-queijo-CHLM-9-696x465.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/entradas-e-petiscos/bolinhas-de-queijo/
+    difficulty: Fácil
+    veggie: Sim
+    doses: 6
+    time: 1h30min
+  - name: Pão Naan
+    image: https://www.teleculinaria.pt/wp-content/uploads/2019/04/2018-01-15-CHPS0589-696x464.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/economicas/pao-naan/
+    difficulty: Fácil
+    veggie: Sim
+    doses: 4
+    time: 1h
+  - name: Omelete Japonesa
+    image: https://www.teleculinaria.pt/wp-content/uploads/2019/07/Omelete-Japonesa-CHPS-2-696x463.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/economicas/omelete-japonesa/
+    difficulty: Fácil
+    veggie: Sim
+    doses: 4
+    time: 50min
