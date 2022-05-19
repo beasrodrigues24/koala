@@ -1,0 +1,35 @@
+include "examples/std.koa"
+alias get_num #pokemon { #pokemon.num }
+alias get_name #pokemon { #pokemon.name }
+"<!DOCTYPE html>
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Evolutions</th>
+        </tr>
+    </thead>"
+
+"   <tbody>"
+for #poke : @pokemon {
+"       <tr>"
+"           <td><img src="#poke.img"></td>"
+"           <td>"#poke.num"</th>"
+"           <td>"#poke.name"</td>"
+"           <td>"join(#poke.type, "br")"</td>"
+"           <td>"
+    if #poke.next_evolution {
+        for #evo : #poke.next_evolution/head {
+"               "#evo.name
+"               <br>"
+        }
+"               "get_name(#poke.next_evolution/last)
+"           </td>"
+    }
+"      </tr>"
+}
+"    </tbody>"
+"</table>"
