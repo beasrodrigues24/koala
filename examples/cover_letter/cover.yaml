@@ -1,0 +1,16 @@
+name: Name
+age: Age
+job: Student
+title: Applicant
+company: Company
+company_city: City
+company_sector: Sector
+university: University
+course: Course
+year: Year
+area: Area
+git: Git link
+email: Email
+phone: Phone Number
+location: Location
+application_for: Application For
