@@ -1,0 +1,85 @@
+recipes:
+  - name: Bacalhau com Natas
+    image: https://static.clubedaanamariabraga.com.br/wp-content/uploads/2019/11/bacalhau-com-natas-1024x576.jpg
+    site: https://anamariabraga.globo.com/receita/bacalhau-com-natas/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 1h00min
+  - name: Arroz de Pato
+    image: https://t1.rg.ltmcdn.com/pt/posts/9/1/2/arroz_de_pato_a_portuguesa_219_600.jpg
+    site: https://www.tudoreceitas.com/receita-de-arroz-de-pato-a-portuguesa-219.html
+    difficulty: Média
+    veggie: Não
+    doses: 6
+    time: 1h30min
+  - name: Bacalhau à Gomes de Sá
+    image: https://www.pingodoce.pt/wp-content/uploads/2016/04/617_bacalhau-617x369.jpg
+    site: https://www.tudogostoso.com.br/receita/3422-bacalhau-a-gomes-e-sa.html
+    difficulty: Difícil
+    veggie: Não
+    doses: 4
+    time: 3h00min
+  - name: Cozido à Portuguesa
+    image: https://www.teleculinaria.pt/wp-content/uploads/2018/03/cozido-a-portuguesa-768x574.jpg.webp
+    site: https://www.teleculinaria.pt/receitas/carnes/cozido-a-portuguesa-2/
+    difficulty: Fácil
+    veggie: Não
+    doses: 8
+    time: 1h41min
+  - name: Cação Estufado
+    image: https://www.foodfromportugal.com/content/uploads/2014/05/cacao-estufado.jpg.webp
+    site: https://www.foodfromportugal.com/pt-pt/receitas/cacao-estufado/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 1h30min
+  - name: Frango Estufado
+    image: https://www.foodfromportugal.com/content/uploads/2014/02/frango-estufado-01.jpg.webp
+    site: https://www.foodfromportugal.com/pt-pt/receitas/frango-estufado/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 1h10min
+  - name: Asinhas de Frango no Forno
+    image: https://www.foodfromportugal.com/content/uploads/2019/02/asas-frango-forno-1.jpg.webp
+    site: https://www.foodfromportugal.com/pt-pt/receitas/asas-frango-forno/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 2h05min
+  - name: Esparguete à Bolonhesa
+    image: https://www.teleculinaria.pt/wp-content/uploads/2015/04/esparguete-bolonhesa-teleculinaria-696x464.png.webp
+    site: https://www.teleculinaria.pt/receitas/carnes/esparguete-a-bolonhesa/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 1h01min
+  - name: Fukuoka-Ramen Clássico
+    image: https://www.kikkoman.pt/fileadmin/_processed_/0/0/csm_WEB_Traditional_Fukuoka_Ramen_0af581b084.jpg
+    site: https://www.kikkoman.pt/receitas/recipe-detail/r/fukuoka-ramen-classico/
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 20min
+  - name: Yakisoba
+    image: https://img.itdg.com.br/tdg/images/recipes/000/076/053/324834/324834_original.jpg?mode=crop&width=710&height=400
+    site: https://www.tudogostoso.com.br/receita/76053-yakisoba.html
+    difficulty: Fácil
+    veggie: Não
+    doses: 4
+    time: 40min
+  - name: Alho Francês à Brás
+    image: https://www.saborintenso.com/images/receitas/Alho-Frances-a-Bras-SI-1.jpg
+    site: https://www.saborintenso.com/f25/alho-frances-bras-33723/
+    difficulty: Fácil
+    veggie: Sim
+    doses: 3
+    time: 10min
+  - name: Bolonhesa Vegetariana
+    image: https://claradesousa.pt/wp-content/uploads/2021/10/Bolonhesa-vegetariana-principal-site-1024x683.jpg
+    site: https://claradesousa.pt/receita/bolonhesa-vegetariana/
+    difficulty: Fácil
+    veggie: Sim
+    doses: 4
+    time: 35min

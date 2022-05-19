@@ -1,0 +1,27 @@
+"<!DOCTYPE html>
+<table cellspacing=\"20\">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Nome</th>
+            <th>Dificuldade</th>
+            <th>Tempo de Preparação</th>
+            <th>Porções</th>
+            <th>Vegetariano</th>
+        </tr>
+    </thead>"
+
+"   <tbody>"
+for #recipe : @recipes {
+"       <tr>"
+"           <td ALIGN=\"CENTER\"><img src=\""#recipe.image"\" width=\"150\" height=\"150\"></td>"
+"           <td ALIGN=\"CENTER\"><a href=\""#recipe.site"\">"#recipe.name"</a></td>"
+"           <td ALIGN=\"CENTER\">"#recipe.difficulty"</td>"
+"           <td ALIGN=\"CENTER\">"#recipe.time"</td>"
+"           <td ALIGN=\"CENTER\">"#recipe.doses"</td>"
+"           <td ALIGN=\"CENTER\">"#recipe.veggie"</td>"
+"           <td>"
+"      </tr>"
+}
+"    </tbody>"
+"</table>"
