@@ -10,6 +10,9 @@
 		},
 		{
 			"include": "#strings"
+		},
+		{
+			"include": "#comment"
 		}
 	],
 	"repository": {
@@ -31,7 +34,16 @@
 			{
 				"name": "variable.parameter.koala",
 				"match": "\\#\\w+"
-			}]
+			},
+			{
+				"name": "entity.other.attribute-name.koala",
+				"match": "\\.\\w+"
+			},
+			{
+				"name": "entity.name.method.koala",
+				"match": "\\/\\w+"
+			}
+		]
 		},
 		"strings": {
 			"name": "string.quoted.double.koala",
@@ -43,6 +55,10 @@
 					"match": "\\\\."
 				}
 			]
+		},
+		"comment": {
+			"name": "comment.line.koala",
+			"match": "//.*\\n"
 		}
 	},
 	"scopeName": "source.koa"

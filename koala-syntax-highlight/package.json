@@ -2,7 +2,7 @@
     "name": "koala-syntax-highlight",
     "displayName": "Koala Syntax Highlight",
     "description": "Syntax Highlighting for the famous koala templating language",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.67.0"
     },
