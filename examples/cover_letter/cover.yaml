@@ -1,16 +1,20 @@
-name: Name
-age: Age
+name: Arlindo Barnabé
+age: 20
 job: Student
-title: Applicant
-company: Company
-company_city: City
-company_sector: Sector
-university: University
-course: Course
-year: Year
-area: Area
-git: Git link
-email: Email
-phone: Phone Number
-location: Location
-application_for: Application For
+title: Software Engineering Student
+company: Sports Interactive
+company_state: London
+company_city: Stratford
+company_country: England
+company_sector: Games Programming
+university: Universidade do Minho
+course: Software Engineering
+year: 3rd
+area: Software Engineering
+recipient: Miles Jacobson
+greeting: Dear
+page: https://beasrodrigues24.github.io/yaPP/
+email: arlindobarney2209@gmail.com
+phone: +351 911111111
+location: Portugal
+application_for: Summer Internship

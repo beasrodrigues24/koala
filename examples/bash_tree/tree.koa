@@ -1,4 +1,4 @@
-include "bash.koa"
+include "examples/bash_tree/bash.koa"
 alias traverse #dir {
     mkdir(#dir.name)
     cd(#dir.name)

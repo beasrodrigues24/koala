@@ -1,4 +1,4 @@
-include "getters.koa"
+include "examples/asciidoc/getters.koa"
 if @titleblock{
         "= " @title
     if @author{
