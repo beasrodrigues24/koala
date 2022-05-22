@@ -76,25 +76,10 @@ class Parser:
 
     def p_statement_for(self, p):
         'statement : FOR TMPVAR ":" variable block'
-        # if '.' in p[2]:
-        #     PrettyPrint.template_warn(
-        #         '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
-        #         self.template_filepath,
-        #         p.lineno(2)
-        #     )
         p[0] = For(p[2], p[4], p[5])
 
     def p_statement_alias(self, p):
         'statement : ALIAS ALIASNAME tmpvars block'
-        # tmpvars = []
-        # for tmpvar in p[3]:
-        #     if '.' in tmpvar:
-        #         PrettyPrint.template_warn(
-        #             '\'.\' found in temporary variable declaration, ignoring following qualifiers...',
-        #             self.template_filepath,
-        #             p.lineno(3)
-        #         )
-        #     tmpvars += [tmpvar[0]]
         p[0] = Alias(p[2], p[3], p[4])
 
     def p_tmpvars(self, p):
