@@ -15,6 +15,7 @@ class Parser:
 
     def load_template(self, filepath):
         self.template_filepath = filepath
+        self.lexer.set_template_filepath(filepath)
         try:
             self.data = open(filepath, 'r').read()
         except IOError:
