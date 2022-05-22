@@ -89,6 +89,9 @@ class Pipe(Var):
         'last': lambda l: l[-1],
         'head': lambda l: l[:-1],
         'tail': lambda l: l[1:],
+        'upper': lambda s: s.upper(),
+        'lower': lambda s: s.lower(),
+        'reverse': lambda l: l[::-1],
     }
 
     def __init__(self, var: Var, pipe: str):

@@ -27,6 +27,10 @@ class Lexer:
 
     t_ignore = ' \t'
 
+    def t_ignore_comment(self, t):
+        r'//.*\n'
+        t.lexer.lineno += 1
+
     def t_lbrace(self, t):
         r'{'
         t.type = '{'
