@@ -1,5 +1,6 @@
-# koala
-
+<p align="center">
+<img src="logo.png" alt="logo" width="200" />
+</p>
 Template language inspired by Pandoc. By receiving a template and a dictionary (YAML or JSON), generates an output file.
 
 ## How to use it
