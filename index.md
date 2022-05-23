@@ -1,37 +1,127 @@
-## Welcome to GitHub Pages
+# Koal@ Manual
 
-You can use the [editor on GitHub](https://github.com/beasrodrigues24/koala/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+<p align="center">
+<img src="logo.png" alt="logo" width="200" />
+</p>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- [Koal@ Manual](#koal-manual)
+  - [What is it?](#what-is-it)
+  - [How to use it?](#how-to-use-it)
+  - [Why is it useful?](#why-is-it-useful)
+  - [Authors](#authors)
+  - [Koal@ Syntax](#koal-syntax)
+    - [Text](#text)
+    - [Variables](#variables)
+    - [Comments](#comments)
+    - [Conditionals](#conditionals)
+    - [Loops](#loops)
+    - [Aliases](#aliases)
+    - [Pipes](#pipes)
+    - [Includes](#includes)
 
-### Markdown
+## What is it?
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Koal@ is a template language inspired by the well known Pandoc Template Language. By receiving a template followed by defined syntax and a dictionary (YAML or JSON), it generates an output file with the desired extension.
 
-```markdown
-Syntax highlighted code block
+## How to use it?
 
-# Header 1
-## Header 2
-### Header 3
+`python3 src/koala.py template -dt TYPE dictionary outputfile` where `TYPE` is `json` or `yaml`.
 
-- Bulleted
-- List
+`python3 src/koala.py -h` shows the help menu.
 
-1. Numbered
-2. List
+## Why is it useful?
 
-**Bold** and _Italic_ and `Code` text
+By defining a template, or using one of the pre-defined available on the [examples directory](https://github.com/beasrodrigues24/koala/tree/main/examples), the user can simplify the work of writing a document or a web page. 
 
-[Link](url) and ![Image](src)
+This way, the user is capable of automating the generation of the desired files.
+
+## Authors
+
+Koal@ was created in the context of Language Processing class at University of Minho, Braga, Portugal.
+
+It was the second practical assignment done by the following students:
+
+[Beatriz Rodrigues](https://github.com/beasrodrigues24)
+
+[Francisco Neves](https://github.com/franl08)
+
+[Guilherme Fernandes](https://github.com/zer0-5)
+
+## Koal@ Syntax
+
+### Text
+
+Inside double quotes (p.e. `"this is an example of text"`).
+
+### Variables
+
+* **Dictionary Variables**: Using `@` (p.e. `@variable`);
+* **Temporary Variables**: Using `#` (p.e. `#tmp`)
+
+### Comments
+
+Using double slashes, just like C (p.e. `// this is a comment`).
+
+### Conditionals
+
+Using `if`, `elif` and `else`. For example:
+```
+if @var {
+    "var exists"
+} elif @var2{
+    "var2 exists"
+} else {
+    "var and var2 doesn't exist"
+}
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+### Loops
 
-### Jekyll Themes
+Using `for`. For example:
+```
+for #tmpvar : @vars {
+    #tmpvar " is in vars."
+}
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/beasrodrigues24/koala/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Aliases
 
-### Support or Contact
+Using `alias` prefix to define it or the name of the alias followed by `(arg1, arg2, ...)` to call it. For example:
+```
+// Defining
+alias cd #dir {
+    "cd " #dir
+}
+// Using
+cd(@dir1)
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Pipes
+
+Using `/` followed by the name of the desired pipe. The following pipes are available:
+
+* **First**: Used with `/first` to get the first element of a list;
+* **Last**: Used with `/last` to get the last element of a list;
+* **Head**: Used with `/head` to get all the elements of a list except the last one;
+* **Tail**: Used with `/tail` to get all the elements of a list except the first one;
+* **Upper**: Used with `/upper` to convert a string to uppercase;
+* **Lower**: Used with `/lower` to convert a string to lowercase;
+* **Reverse**: Used with `/reverse` to reverse a string or a list.
+
+For example:
+```
+for #name : @names/head{#name", "} @names/last
+```
+Will produce a list of the names at `@names` separated by a comma, except the last one.
+```
+for #name : @names{#name/upper" "}
+```
+Will produce a list of the names at `@names` in uppercase.
+```
+for #name : @names/reverse{#names" "}
+```
+Will produce a list of the names at `@names` in the reverse order.
+
+### Includes
+
+Used to import aliases from another `.koa` file (p.e. `include "file.koa"`). The path of the included file should be relative to the directory where the koal@ app will be run.
