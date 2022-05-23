@@ -7,6 +7,8 @@ Template language inspired by Pandoc. By receiving a template and a dictionary (
 
 `python3 src/koala.py template -dt TYPE dictionary outputfile` where `type` is JSON or YAML.
 
+For more information, consult the [Manual](https://beasrodrigues24.github.io/koala/).
+
 ## Authors 
 
 [Beatriz Rodrigues](https://github.com/beasrodrigues24)
