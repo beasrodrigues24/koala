@@ -39,7 +39,7 @@ class TmpVar(Var):
         return f'TmpVar: {self.name}'
 
     def test(self, dict):
-        return self.name in dict['tmp'].get(self.name) != None
+        return dict['tmp'].get(self.name) != None
 
     def iter(self, dict):
         v = dict['tmp'].get(self.name)
