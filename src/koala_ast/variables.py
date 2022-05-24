@@ -31,7 +31,7 @@ class DictVar(Var):
             return v
         else:
             panic(
-                f'Variable \'{".".join(self.name)}\' not found in the dictionary.')
+                f'Variable \'{self.name}\' not found in the dictionary.')
 
 
 class TmpVar(Var):
